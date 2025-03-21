@@ -9,7 +9,6 @@ const argv = yargs(hideBin(process.argv))
   .option('user', { description: 'Usuario', type: 'string', demandOption: true })
   .parseSync();
 
-// Ahora TypeScript ya reconocerá la propiedad user
 const user = argv.user as string;
 
 if (!user) {
@@ -18,6 +17,7 @@ if (!user) {
 }
 let gestor: Gestor = new Gestor(user, () => {
     console.log('Inventario cargado y listo para usar.');
+
 
 
 yargs(hideBin(process.argv))
@@ -30,25 +30,22 @@ yargs(hideBin(process.argv))
         args.id as number,
         args.name as string,
         args.desc as string,
-        //args.type as Tipos,
-        //args.genre as Generos,
-        //args.franchise as string,
-        //args.number as number,
-        //args.exclusive as boolean,
-        //args.features as string,
-        //args.market as number
+        args.type as Tipos,
+        args.genre as Generos,
+        args.franchise as string,
+        args.number as number,
+        args.exclusive as boolean,
+        args.features as string,
+        args.market as number
       );
+        gestor.add(funko, (err) => {
+          if (err) {
+            console.error(err.message);
+            return;
+          }
+          console.log('Funko creado y añadido exitosamente');
+        });
 
-      try {
-        gestor.add(funko);
-        console.log('Funko creado y añadido exitosamente');
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
-        } else {
-          console.error('Ha ocurrido un error desconocido');
-        }
-      }
     }
   )
   .command(
@@ -60,25 +57,21 @@ yargs(hideBin(process.argv))
         args.id as number,
         args.name as string,
         args.desc as string,
-        //args.type as Tipos,
-        //args.genre as Generos,
-        //args.franchise as string,
-        //args.number as number,
-        //args.exclusive as boolean,
-        //args.features as string,
-        //args.market as number
+        args.type as Tipos,
+        args.genre as Generos,
+        args.franchise as string,
+        args.number as number,
+        args.exclusive as boolean,
+        args.features as string,
+        args.market as number
       );
-
-      try {
-        gestor.update(funko);
-        console.log('Funko actualizado exitosamente');
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
-        } else {
-          console.error('Ha ocurrido un error desconocido');
+      gestor.update(funko, (err) => {
+        if (err) {
+          console.error(err.message);
+          return;
         }
-      }
+        console.log('Funko actualizado exitosamente');
+      });
     }
   )
   .command(
@@ -86,35 +79,27 @@ yargs(hideBin(process.argv))
     'Eliminar un Funko',
     (yargs) => yargs.option('id', { type: 'number', demandOption: true }),
     (args) => {
-      try {
-        gestor.remove(args.id);
-        console.log('Funko eliminado exitosamente');
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
-        } else {
-          console.error('Ha ocurrido un error desconocido');
+      gestor.remove(args.id, (err) => {
+        if (err) {
+          console.error(err.message);
+          return;
         }
-      }
+        console.log('Funko eliminado exitosamente');
+      });
     }
   )
-  
   .command(
     'read',
     'Leer un Funko',
     (yargs) => yargs.option('id', { type: 'number', demandOption: true }),
     (args) => {
-      try {
-        const funkostring:string = gestor.read(args.id);
-        console.log(funkostring);
-
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
-        } else {
-          console.error('Ha ocurrido un error desconocido');
+      gestor.read(args.id, (err, funko) => {
+        if (err) {
+          console.error(err.message);
+          return;
         }
-      }
+        console.log(funko);
+      });
     }
   )
   .command(
@@ -127,7 +112,7 @@ yargs(hideBin(process.argv))
         console.log(`ID: ${id}, Nombre: ${funko.nombre}`);
       });
     }
-  )
-  .help()
-  .parseSync();
+)
+.help()
+.parseSync();
 });

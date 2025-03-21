@@ -28,16 +28,16 @@ export default class Gestor {
         fs.readdir(this.databaseDir, (err, files) => {
             if (err) {
                 console.error('Error al leer la carpeta:', err);
-                return;
-            }
-    
-            if (files.length === 0) {
-                // Si no hay archivos, llamamos al callback de inmediato
                 callback();
                 return;
             }
     
-            let counter = 0; // Contador de archivos leídos
+            if (files.length === 0) {
+                callback();
+                return;
+            }
+    
+            let counter = 0;
     
             files.forEach(file => {
                 const filePath = path.join(this.databaseDir, file);
@@ -52,10 +52,8 @@ export default class Gestor {
                             console.error(`Error al parsear el archivo ${file}:`, parseError);
                         }
                     }
-    
                     counter++;
                     if (counter === files.length) {
-                        // Llamamos al callback solo cuando se hayan procesado todos los archivos
                         callback();
                     }
                 });
@@ -63,75 +61,97 @@ export default class Gestor {
         });
     }
     
+    
 
 
     /**
      * Guarda un objeto Funko como un archivo JSON en la carpeta.
      */
-    private storeEntidad(funko: Funko): void {
+    private storeEntidad(funko: Funko, callback: (err?: Error) => void): void {
         const filePath = path.join(this.databaseDir, `${funko.ID}.json`);
         fs.writeFile(filePath, JSON.stringify(funko, null, 2), 'utf8', (err) => {
-            if (err) console.error(`Error al escribir en el archivo ${filePath}:`, err);
+          if (err) {
+            callback(new Error(`Error al escribir en el archivo ${filePath}: ${err.message}`));
+          } else {
+            callback();
+          }
         });
     }
 
     /**
      * Añadir un nuevo Funko a la base de datos.
      */
-    add(funko: Funko): void {
+    add(funko: Funko, callback: (err?: Error) => void): void {
         if (this._almacenMap.has(funko.ID)) {
-            throw new Error(`Error, ID ${funko.ID} ya está en uso`);
+          callback(new Error(`Error, ID ${funko.ID} ya está en uso`));
         } else {
-            this._almacenMap.set(funko.ID, funko);
-            this.storeEntidad(funko);
+          this._almacenMap.set(funko.ID, funko);
+          this.storeEntidad(funko, (err) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback();
+            }
+          });
         }
-    }
+      }
 
     /**
      * Eliminar un Funko de la base de datos.
      */
-    remove(ID: number): void {
+    remove(ID: number, callback: (err?: Error) => void): void {
         if (!this._almacenMap.has(ID)) {
-            throw new Error(`Funko con ID ${ID} no encontrado.`);
-        } else {
+            callback(new Error(`Funko con ID ${ID} no encontrado.`));
+        }else {
             this._almacenMap.delete(ID);
             const filePath = path.join(this.databaseDir, `${ID}.json`);
             fs.unlink(filePath, (err) => {
-                if (err) console.error(`Error al eliminar el archivo ${filePath}:`, err);
+                if (err) {
+                    callback(new Error(`Error al eliminar el archivo ${filePath}: ${err.message}`));
+                } else {
+                    callback();
+                }
             });
         }
     }
 
-    get(ID: number): Funko {
+    get(ID: number, callback: (err?: Error, funko?: Funko) => void): void {
         const funko = this._almacenMap.get(ID);
         if (funko) {
-            return funko;
+            callback(undefined, funko);
         } else {
-            throw new Error(`Funko con ID ${ID} no encontrado.`);
+            callback(new Error(`Funko con ID ${ID} no encontrado.`));
         }
     }
 
-    update(funko: Funko): void {
+    update(funko: Funko, callback: (err?: Error) => void): void {
         if (!this.almacenMap.has(funko.ID)) {
-          throw new Error(`Funko con ID ${funko.ID} no encontrado.`);
+          callback(new Error(`Funko con ID ${funko.ID} no encontrado.`));
         } else {
           this._almacenMap.set(funko.ID, funko);
-          this.storeEntidad(funko);
+          this.storeEntidad(funko, (err) => {
+            if (err) {
+              callback(err);
+            } else {
+              callback();
+            }
+          });
         }
     }
 
-    read(ID: number): string{
-        try {
-            const funko = this.get(ID);
-            return `ID: ${funko.ID}\nNombre: ${funko.nombre}\nDescripción: ${funko.descripcion}`;
-        }
-        catch (error: unknown) {
-            if (error instanceof Error) {
-                throw new Error(error.message);
+    read(ID: number, callback: (err?: Error, funko?: string) => void): void {
+        this.get(ID, (err, funko) => {
+            if (err) {
+                callback(err);
             } else {
-                throw new Error('Ha ocurrido un error desconocido');
+                if (funko) {
+                    let funkostring:string = `ID: ${funko.ID}\nNombre: ${funko.nombre}\nDescripción: ${funko.descripcion}\nTipo: ${funko.tipo}\nGénero: ${funko.genero}\nFranquicia: ${funko.franquicia}\nNúmero: ${funko.numero}\nExclusivo: ${funko.exclusivo}\nCaracterísticas: ${funko.caracteristicas}\nMercado: ${funko.mercado}`;
+                    callback(undefined, funkostring);
+                } else {
+                    callback(new Error(`Funko con ID ${ID} no encontrado.`));
+                }
             }
-        }
+        });
     }
 
     /**
@@ -141,5 +161,9 @@ export default class Gestor {
         this._almacenMap.forEach((funko) => {
             console.log(funko.ID, funko.nombre);
         });
+    }
+
+    length(): number {
+        return this._almacenMap.size;
     }
 }
