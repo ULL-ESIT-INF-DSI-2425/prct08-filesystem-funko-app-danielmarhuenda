@@ -82,16 +82,23 @@ yargs(hideBin(process.argv))
     }
   )
   .command(
-    'list',
-    'Imprimir los Funkos de este usuario',
-    {},
-    () => {
-      console.log('Funkos almacenados:');
-      gestor.almacenMap.forEach((funko, id) => {
-        console.log(`ID: ${id}, Nombre: ${funko.nombre}`);
-      });
+    'remove',
+    'Eliminar un Funko',
+    (yargs) => yargs.option('id', { type: 'number', demandOption: true }),
+    (args) => {
+      try {
+        gestor.remove(args.id);
+        console.log('Funko eliminado exitosamente');
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        } else {
+          console.error('Ha ocurrido un error desconocido');
+        }
+      }
     }
   )
+  
   .command(
     'read',
     'Leer un Funko',
@@ -108,6 +115,17 @@ yargs(hideBin(process.argv))
           console.error('Ha ocurrido un error desconocido');
         }
       }
+    }
+  )
+  .command(
+    'list',
+    'Imprimir los Funkos de este usuario',
+    {},
+    () => {
+      console.log('Funkos almacenados:');
+      gestor.almacenMap.forEach((funko, id) => {
+        console.log(`ID: ${id}, Nombre: ${funko.nombre}`);
+      });
     }
   )
   .help()
