@@ -92,6 +92,24 @@ yargs(hideBin(process.argv))
       });
     }
   )
+  .command(
+    'read',
+    'Leer un Funko',
+    (yargs) => yargs.option('id', { type: 'number', demandOption: true }),
+    (args) => {
+      try {
+        const funkostring:string = gestor.read(args.id);
+        console.log(funkostring);
+
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        } else {
+          console.error('Ha ocurrido un error desconocido');
+        }
+      }
+    }
+  )
   .help()
   .parseSync();
 });

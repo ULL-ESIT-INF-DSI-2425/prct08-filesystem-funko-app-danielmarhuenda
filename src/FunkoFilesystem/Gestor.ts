@@ -102,12 +102,35 @@ export default class Gestor {
         }
     }
 
+    get(ID: number): Funko {
+        const funko = this._almacenMap.get(ID);
+        if (funko) {
+            return funko;
+        } else {
+            throw new Error(`Funko con ID ${ID} no encontrado.`);
+        }
+    }
+
     update(funko: Funko): void {
         if (!this.almacenMap.has(funko.ID)) {
           throw new Error(`Funko con ID ${funko.ID} no encontrado.`);
         } else {
           this._almacenMap.set(funko.ID, funko);
           this.storeEntidad(funko);
+        }
+    }
+
+    read(ID: number): string{
+        try {
+            const funko = this.get(ID);
+            return `ID: ${funko.ID}\nNombre: ${funko.nombre}\nDescripción: ${funko.descripcion}`;
+        }
+        catch (error: unknown) {
+            if (error instanceof Error) {
+                throw new Error(error.message);
+            } else {
+                throw new Error('Ha ocurrido un error desconocido');
+            }
         }
     }
 
