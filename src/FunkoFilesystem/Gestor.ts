@@ -6,16 +6,14 @@ import path from 'path';
 export default class Gestor {
     private databaseDir: string;
     private _almacenMap = new Map<number, Funko>();
-    private inventarioCargado = false;
 
-    constructor(usuario: string) {
+    constructor(usuario: string, callback: () => void){
         this.databaseDir = path.join("BasedeDatosFunko", usuario);
         if (!fs.existsSync(this.databaseDir)) {
             fs.mkdirSync(this.databaseDir, { recursive: true });
         }
         this.loadInventario(() => {
-            this.inventarioCargado = true;
-            console.log("Inventario cargado y callback ejecutado");
+            callback();
         });
     }
 
@@ -33,21 +31,38 @@ export default class Gestor {
                 return;
             }
     
+            if (files.length === 0) {
+                // Si no hay archivos, llamamos al callback de inmediato
+                callback();
+                return;
+            }
+    
+            let counter = 0; // Contador de archivos leídos
+    
             files.forEach(file => {
                 const filePath = path.join(this.databaseDir, file);
                 fs.readFile(filePath, 'utf8', (err, data) => {
                     if (err) {
                         console.error(`Error al leer el archivo ${file}:`, err);
-                        return;
+                    } else {
+                        try {
+                            const funko: Funko = JSON.parse(data);
+                            this._almacenMap.set(funko.ID, funko);
+                        } catch (parseError) {
+                            console.error(`Error al parsear el archivo ${file}:`, parseError);
+                        }
                     }
     
-                    const funko: Funko = JSON.parse(data);
-                    this._almacenMap.set(funko.ID, funko);
+                    counter++;
+                    if (counter === files.length) {
+                        // Llamamos al callback solo cuando se hayan procesado todos los archivos
+                        callback();
+                    }
                 });
             });
-            callback(); // Llamamos al callback después de cargar los archivos
         });
     }
+    
 
 
     /**

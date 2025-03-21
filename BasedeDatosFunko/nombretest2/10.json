@@ -1,0 +1,12 @@
+{
+  "ID": 10,
+  "nombre": "Juanito",
+  "descripcion": "Funko de juanito",
+  "tipo": "Pop!",
+  "genero": "Deportes",
+  "franquicia": "real",
+  "numero": 123,
+  "exclusivo": false,
+  "caracteristicas": "caballo",
+  "mercado": 999
+}
