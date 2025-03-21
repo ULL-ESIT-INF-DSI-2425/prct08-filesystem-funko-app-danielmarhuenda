@@ -102,6 +102,15 @@ export default class Gestor {
         }
     }
 
+    update(funko: Funko): void {
+        if (!this.almacenMap.has(funko.ID)) {
+          throw new Error(`Funko con ID ${funko.ID} no encontrado.`);
+        } else {
+          this._almacenMap.set(funko.ID, funko);
+          this.storeEntidad(funko);
+        }
+    }
+
     /**
      * Imprimir los IDs y nombres de los Funkos almacenados.
      */

@@ -23,7 +23,7 @@ let gestor: Gestor = new Gestor(user, () => {
 yargs(hideBin(process.argv))
   .command(
     'add',
-    'Adds a funko',
+    'Añade un funko',
     (yargs) => yargs.options(Parametros),
     (args) => {
       const funko = new Funko(
@@ -42,6 +42,36 @@ yargs(hideBin(process.argv))
       try {
         gestor.add(funko);
         console.log('Funko creado y añadido exitosamente');
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        } else {
+          console.error('Ha ocurrido un error desconocido');
+        }
+      }
+    }
+  )
+  .command(
+    'update',
+    'Modifica un funko',
+    (yargs) => yargs.options(Parametros),
+    (args) => {
+      const funko = new Funko(
+        args.id as number,
+        args.name as string,
+        args.desc as string,
+        //args.type as Tipos,
+        //args.genre as Generos,
+        //args.franchise as string,
+        //args.number as number,
+        //args.exclusive as boolean,
+        //args.features as string,
+        //args.market as number
+      );
+
+      try {
+        gestor.update(funko);
+        console.log('Funko actualizado exitosamente');
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(error.message);
