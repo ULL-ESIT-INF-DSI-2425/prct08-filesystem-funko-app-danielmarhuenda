@@ -9,7 +9,6 @@ describe("Tests del Gestor de Funkos", () => {
     let funko2:Funko = new Funko(2, "Funko2", "Funko de prueba", Tipos.POP, Generos.TV, "Naruto", 2, false, "Ninguna", 20);
     let funko3:Funko = new Funko(3, "Funko3", "Funko de prueba", Tipos.RIDES, Generos.DEPORTE, "Naruto", 3, false, "Ninguna", 30);
     let gestor:Gestor = new Gestor("test", () => {
-        console.log('Inventario cargado y listo para usar.');
     });
 
     test("lenght", () => {
@@ -69,9 +68,8 @@ describe("Tests del Gestor de Funkos", () => {
 
     test("Errores por archivo no existente", () => {
         let gestor2:Gestor = new Gestor("nuevotest", () => {
-            console.log('Inventario cargado y listo para usar.');
         });
-        fs.rmdirSync("BasedeDatosFunko/nuevotest/", { recursive: true });
+        fs.rmSync("BasedeDatosFunko/nuevotest/", { recursive: true });
 
         gestor2.add(funko1, (err) => {
             expect(err).toBeDefined();
@@ -84,6 +82,12 @@ describe("Tests del Gestor de Funkos", () => {
         gestor2.update(funko1, (err) => {
             expect(err).toBeDefined();
             expect(err?.message).toMatch("Funko con ID 1 no encontrado.");
+        });
+    });
+
+    test("Leer de carpeta ya existente", () => {
+        let gestor2:Gestor = new Gestor("nombretest", () => {
+            expect(gestor2.length()).toBe(5);
         });
     });
 
