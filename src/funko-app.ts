@@ -123,6 +123,12 @@ yargs(hideBin(process.argv))
 .parseSync();
 });
 
+/**
+ * Función para imprimir por pantalla un funko.
+ * Quería hacerlo función dentro de la clase funko
+ * Pero me daba error funko.Imprimir() is not a function y no encontré solución
+ * @param funko Funko a imprimir por pantalla
+ */
 function Imprimir(funko:Funko):void{
     log(chalk.green(`ID: ${funko.ID}`));
     log(chalk.green(`Nombre: ${funko.nombre}`));

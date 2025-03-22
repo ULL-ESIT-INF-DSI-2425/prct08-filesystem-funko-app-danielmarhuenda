@@ -1,12 +1,24 @@
 import type { Options } from 'yargs';
 
+/**
+ * Tipos de Funko
+ */
 export enum Tipos{POP="Pop!", RIDES="Pop! Rides", SODA="Vynil Soda", GOLD="Vynil Gold"}
 
+/**
+ * Generos de donde viene el personaje del Funko
+ */
 export enum Generos{ANIMACION="Animación", TV="Películas y TV", JUEGO="Videojuegos", DEPORTE="Deportes", MUSICA="Música", ANIME="Ánime"}
 
+/**
+ * Separador de precios de los Funkos para poner diferentes colores al imprimir.
+ */
 export enum Precios{NADA = 0, BAJO=10, MEDIO=20, ALTO=30, DEMASIADO=40}
 
-interface CommonOptions {
+/**
+ * Valores que tiene un Funko
+ */
+export interface CommonOptions {
     user: string;
     id: number;
     name: string;
@@ -18,8 +30,11 @@ interface CommonOptions {
     exclusive: boolean;
     features: string;
     market: number;
-  }
+}
 
+/**
+ * Parametros que usa el yargs, lo pongo aquí para no repetirlo en cada comando.
+ */
 export const Parametros: { [K in keyof CommonOptions]: Options } = {
     user: { description: 'Usuario', type: 'string', demandOption: true },
     id: { description: 'Funko ID', type: 'number', demandOption: true },

@@ -3,10 +3,21 @@ import Funko from "./Funko.js";
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * Clase que gestiona la base de datos de Funkos.
+ * Almaceno los datos de forma persistente en archivos JSON.
+ * Cada usuario tiene su propia carpeta en la que se guardan los archivos.
+ * Almaceno los datos de forma temporal en un Map.
+ */
 export default class Gestor {
     private databaseDir: string;
     private _almacenMap = new Map<number, Funko>();
 
+    /**
+     * Constructor de la clase Gestor.
+     * @param usuario  Nombre del usuario.
+     * @param callback  Función de callback para que el resto del programa espere a que se carguen los datos.
+     */
     constructor(usuario: string, callback: () => void){
         this.databaseDir = path.join("BasedeDatosFunko", usuario);
         if (!fs.existsSync(this.databaseDir)) {
@@ -17,12 +28,16 @@ export default class Gestor {
         });
     }
 
+    /**
+     * Getter de almacenMap.
+     */
     get almacenMap(): Map<number, Funko> {
         return this._almacenMap;
     }
 
     /**
-     * Carga todos los archivos JSON de la carpeta al iniciar.
+    * Carga todos los archivos JSON de la carpeta al iniciar.
+    * @param callback  Función de callback para que el resto del programa espere a que se carguen los datos.
     */
     private loadInventario(callback: () => void): void {
         fs.readdir(this.databaseDir, (err, files) => {
@@ -66,6 +81,7 @@ export default class Gestor {
 
     /**
      * Guarda un objeto Funko como un archivo JSON en la carpeta.
+     * @param funko  Objeto Funko a guardar.
      */
     private storeEntidad(funko: Funko, callback: (err?: Error) => void): void {
         const filePath = path.join(this.databaseDir, `${funko.ID}.json`);
@@ -80,6 +96,7 @@ export default class Gestor {
 
     /**
      * Añadir un nuevo Funko a la base de datos.
+     * @param funko  Objeto Funko a añadir.
      */
     add(funko: Funko, callback: (err?: Error) => void): void {
         if (this._almacenMap.has(funko.ID)) {
@@ -98,6 +115,7 @@ export default class Gestor {
 
     /**
      * Eliminar un Funko de la base de datos.
+     * @param ID  ID del Funko a eliminar.
      */
     remove(ID: number, callback: (err?: Error) => void): void {
         if (!this._almacenMap.has(ID)) {
@@ -115,6 +133,10 @@ export default class Gestor {
         }
     }
 
+    /**
+     * Obtener un Funko de la base de datos.
+     * @param ID  ID del Funko a obtener.
+     */
     get(ID: number, callback: (err?: Error, funko?: Funko) => void): void {
         const funko = this._almacenMap.get(ID);
         if (funko) {
@@ -124,6 +146,10 @@ export default class Gestor {
         }
     }
 
+    /**
+     * Actualizar un Funko de la base de datos.
+     * @param funko  Objeto Funko a actualizar.
+     */
     update(funko: Funko, callback: (err?: Error) => void): void {
         if (!this.almacenMap.has(funko.ID)) {
           callback(new Error(`Funko con ID ${funko.ID} no encontrado.`));
@@ -139,6 +165,12 @@ export default class Gestor {
         }
     }
 
+    /**
+     * Leer un Funko de la base de datos.
+     * Al final no usé esta función debido a que había que usar chalk en mitad de la función y no podía ponerlo todo en un solo string.
+     * Dejo la función por si acaso.
+     * @param ID  ID del Funko a leer
+     */
     read(ID: number, callback: (err?: Error, funko?: string) => void): void {
         this.get(ID, (err, funko) => {
             if (err) {
@@ -155,7 +187,7 @@ export default class Gestor {
     }
 
     /**
-     * Imprimir los IDs y nombres de los Funkos almacenados.
+     * Imprimir los IDs y nombres de los Funkos almacenados para ver si lee bien los json.
      */
     public ImprimirTest(): void {
         this._almacenMap.forEach((funko) => {
@@ -163,6 +195,9 @@ export default class Gestor {
         });
     }
 
+    /**
+     * Getter de la longitud del Map para ver rapidamente en los test si se añadieron funkos.
+     */
     length(): number {
         return this._almacenMap.size;
     }
