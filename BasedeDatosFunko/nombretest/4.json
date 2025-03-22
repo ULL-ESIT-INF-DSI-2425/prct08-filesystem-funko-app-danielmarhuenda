@@ -1,0 +1,12 @@
+{
+  "ID": 4,
+  "nombre": "Funko barato",
+  "descripcion": "Ejemplo de precio bajo",
+  "tipo": "Vynil Soda",
+  "genero": "Videojuegos",
+  "franquicia": "Real",
+  "numero": 123,
+  "exclusivo": true,
+  "caracteristicas": "Pequeño, caballo",
+  "mercado": 11
+}

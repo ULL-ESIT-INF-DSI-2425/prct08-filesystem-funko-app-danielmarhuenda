@@ -1,0 +1,12 @@
+{
+  "ID": 5,
+  "nombre": "Funko regalado",
+  "descripcion": "Te lo regalaron",
+  "tipo": "Pop! Rides",
+  "genero": "Deportes",
+  "franquicia": "Real",
+  "numero": 123,
+  "exclusivo": true,
+  "caracteristicas": "Pequeño, caballo",
+  "mercado": 1
+}

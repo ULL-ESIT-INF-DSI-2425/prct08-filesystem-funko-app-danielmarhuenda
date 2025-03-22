@@ -4,6 +4,8 @@ export enum Tipos{POP="Pop!", RIDES="Pop! Rides", SODA="Vynil Soda", GOLD="Vynil
 
 export enum Generos{ANIMACION="Animación", TV="Películas y TV", JUEGO="Videojuegos", DEPORTE="Deportes", MUSICA="Música", ANIME="Ánime"}
 
+export enum Precios{NADA = 0, BAJO=10, MEDIO=20, ALTO=30, DEMASIADO=40}
+
 interface CommonOptions {
     user: string;
     id: number;

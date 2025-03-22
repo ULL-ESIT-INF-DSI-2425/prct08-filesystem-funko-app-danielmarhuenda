@@ -1,12 +1,12 @@
 {
-  "ID": 1,
-  "nombre": "Juan",
-  "descripcion": "Caballo en balcón",
-  "tipo": "Pop!",
+  "ID": 3,
+  "nombre": "Precio medio",
+  "descripcion": "Ya no se me ocurre nada",
+  "tipo": "Vynil Soda",
   "genero": "Videojuegos",
   "franquicia": "Real",
   "numero": 123,
   "exclusivo": false,
   "caracteristicas": "Pequeño, caballo",
-  "mercado": 500
+  "mercado": 23
 }

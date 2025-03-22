@@ -1,9 +1,12 @@
-import Gestor from "./FunkoFilesystem/Gestor.js";
 import Funko from "./FunkoFilesystem/Funko.js";
-import { Tipos, Generos, Parametros } from "./FunkoFilesystem/Enumerados.js";
+import Gestor from "./FunkoFilesystem/Gestor.js";
+import { Tipos, Generos, Parametros, Precios } from "./FunkoFilesystem/Enumerados.js";
 
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+
+import chalk from "chalk";
+const log = console.log;
 
 const argv = yargs(hideBin(process.argv))
   .option('user', { description: 'Usuario', type: 'string', demandOption: true })
@@ -16,7 +19,7 @@ if (!user) {
   process.exit(1);
 }
 let gestor: Gestor = new Gestor(user, () => {
-    console.log('Inventario cargado y listo para usar.');
+    log(chalk.green('Inventario cargado y listo para usar.'));
 
 
 
@@ -40,10 +43,10 @@ yargs(hideBin(process.argv))
       );
         gestor.add(funko, (err) => {
           if (err) {
-            console.error(err.message);
+            log(chalk.red(err.message));
             return;
           }
-          console.log('Funko creado y añadido exitosamente');
+          log(chalk.green('Funko creado y añadido exitosamente'));
         });
 
     }
@@ -67,10 +70,10 @@ yargs(hideBin(process.argv))
       );
       gestor.update(funko, (err) => {
         if (err) {
-          console.error(err.message);
-          return;
+            log(chalk.red(err.message));
+            return;
         }
-        console.log('Funko actualizado exitosamente');
+        log(chalk.green('Funko actualizado exitosamente'));
       });
     }
   )
@@ -81,10 +84,10 @@ yargs(hideBin(process.argv))
     (args) => {
       gestor.remove(args.id, (err) => {
         if (err) {
-          console.error(err.message);
-          return;
+            log(chalk.red(err.message));
+            return;
         }
-        console.log('Funko eliminado exitosamente');
+        log(chalk.green('Funko eliminado exitosamente'));
       });
     }
   )
@@ -93,12 +96,15 @@ yargs(hideBin(process.argv))
     'Leer un Funko',
     (yargs) => yargs.option('id', { type: 'number', demandOption: true }),
     (args) => {
-      gestor.read(args.id, (err, funko) => {
+      gestor.get(args.id, (err, funko) => {
         if (err) {
-          console.error(err.message);
-          return;
+            log(chalk.red(err.message));
+            return;
+        }else if(!funko){
+            log(chalk.red('Funko no encontrado'));
+            return;
         }
-        console.log(funko);
+        Imprimir(funko);
       });
     }
   )
@@ -108,11 +114,35 @@ yargs(hideBin(process.argv))
     {},
     () => {
       console.log('Funkos almacenados:');
-      gestor.almacenMap.forEach((funko, id) => {
-        console.log(`ID: ${id}, Nombre: ${funko.nombre}`);
+      gestor.almacenMap.forEach((funko) => {
+        Imprimir(funko);
       });
     }
 )
 .help()
 .parseSync();
 });
+
+function Imprimir(funko:Funko):void{
+    log(chalk.green(`ID: ${funko.ID}`));
+    log(chalk.green(`Nombre: ${funko.nombre}`));
+    log(chalk.green(`Descripcion: ${funko.descripcion}`));
+    log(chalk.green(`Tipo: ${funko.tipo}`));
+    log(chalk.green(`Genero: ${funko.genero}`));
+    log(chalk.green(`Franquicia: ${funko.franquicia}`));
+    log(chalk.green(`Numero: ${funko.numero}`));
+    log(chalk.green(`Exclusivo: ${funko.exclusivo}`));
+    log(chalk.green(`Caracteristicas: ${funko.caracteristicas}`));
+    if(funko.mercado >= Precios.NADA && funko.mercado < Precios.BAJO){
+        log(chalk.red(`Precio: ${funko.mercado}`));
+    }else if(funko.mercado >= Precios.BAJO && funko.mercado < Precios.MEDIO){
+        log(chalk.yellow(`Precio: ${funko.mercado}`));
+    }else if(funko.mercado >= Precios.MEDIO && funko.mercado < Precios.ALTO){
+        log(chalk.gray(`Precio: ${funko.mercado}`));
+    }else if(funko.mercado >= Precios.ALTO && funko.mercado < Precios.DEMASIADO){
+        log(chalk.green(`Precio: ${funko.mercado}`));
+    }else{
+        log(chalk.greenBright(`Precio: ${funko.mercado}`));
+    }
+    log(chalk.green('----------------------------------'));
+}
