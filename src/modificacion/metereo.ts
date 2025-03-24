@@ -16,21 +16,7 @@ function FicherotoJSON(entrada_ruta:string, callback:(err?:Error, entrada_json?:
     });
 }
 
-function JSONtoString(textojson:JSON[]):string{
-    let result = "";
 
-    //For each tipo de variable result += (variable + ",")
-
-    textojson.forEach(element => {
-        result += element.fecha + ",";
-        result += element.ubicacion + ",";
-        result += element.temperatura + ",";
-        result += element.humedad + ",";
-        result += element.precipitacion + ",";
-    });
-
-    return result;
-}
 
 function Escribir(salida_ruta:string, datos:string, callback:(err?:Error) => void):void{
     writeFile(salida_ruta, datos, (error) => {
@@ -48,14 +34,14 @@ function Traducir(entrada_ruta:string, salida_ruta:string, palabra:string, callb
             callback(error);
 
         }else if(entrada_json){
-            let entrada_string = JSONtoString(entrada_json);
-            Escribir(salida_ruta, entrada_string, (error) => {
+            //let entrada_string = JSONtoString(entrada_json);
+            //Escribir(salida_ruta, entrada_string, (error) => {
                 if(error){
                     callback(error);
                 }else{
                     callback(undefined);
                 }
-            });
+            //});
 
         }else{
             callback(new Error("Error en JSONtoString"));
