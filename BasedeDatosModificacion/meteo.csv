@@ -1,0 +1,7 @@
+fecha,ubicacion,temperatura,humedad,precipitacion,viento_kmh
+"2025-03-20","Madrid",18.5,65,0,12
+"2025-03-20","Barcelona",17.2,70,2.3,15
+"2025-03-21","Madrid",20.1,60,0,10
+"2025-03-21","Barcelona",16.8,75,5.0,20
+"2025-03-21","Sevilla",22.3,55,0,8
+

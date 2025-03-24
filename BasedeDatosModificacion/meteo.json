@@ -1,0 +1,43 @@
+[
+  {
+    "fecha": "2025-03-20",
+    "ubicacion": "Madrid",
+    "temperatura": 18.5,
+    "humedad": 65,
+    "precipitacion": 0,
+    "viento_kmh": 12
+  },
+  {
+    "fecha": "2025-03-20",
+    "ubicacion": "Barcelona",
+    "temperatura": 17.2,
+    "humedad": 70,
+    "precipitacion": 2.3,
+    "viento_kmh": 15
+  },
+  {
+    "fecha": "2025-03-21",
+    "ubicacion": "Madrid",
+    "temperatura": 20.1,
+    "humedad": 60,
+    "precipitacion": 0,
+    "viento_kmh": 10
+  },
+  {
+    "fecha": "2025-03-21",
+    "ubicacion": "Barcelona",
+    "temperatura": 16.8,
+    "humedad": 75,
+    "precipitacion": 5.0,
+    "viento_kmh": 20
+  },
+  {
+    "fecha": "2025-03-21",
+    "ubicacion": "Sevilla",
+    "temperatura": 22.3,
+    "humedad": 55,
+    "precipitacion": 0,
+    "viento_kmh": 8
+  }
+]
+
